@@ -1,0 +1,81 @@
+[gd_scene load_steps=10 format=3 uid="uid://1phy02ejylxr"]
+
+[ext_resource type="PackedScene" uid="uid://dkr2qyhxgu3ms" path="res://block.tscn" id="1_wfoio"]
+[ext_resource type="PackedScene" uid="uid://gtdyl10q4wae" path="res://steve.tscn" id="2_xiay1"]
+[ext_resource type="Environment" uid="uid://n3v567ndwcc5" path="res://Resources/level_1_environment.tres" id="4_67vxn"]
+[ext_resource type="PackedScene" uid="uid://dmr0fcamx7t56" path="res://addons/virtual_joystick/virtual_joystick_scene.tscn" id="5_8y0lm"]
+[ext_resource type="PackedScene" uid="uid://cat7ef0buh2tx" path="res://coin.tscn" id="5_831ue"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2cmvk"]
+albedo_color = Color(0.454902, 0.219608, 1, 1)
+roughness = 0.82
+
+[sub_resource type="BoxMesh" id="BoxMesh_cenmw"]
+material = SubResource("StandardMaterial3D_2cmvk")
+size = Vector3(10, 0.5, 10)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_svde7"]
+size = Vector3(10, 0.5, 10)
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_ln624"]
+specular_color = Color(0.160784, 0.160784, 0.160784, 1)
+
+[node name="Level1" type="Node3D"]
+
+[node name="Floor" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
+metadata/_edit_group_ = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor"]
+mesh = SubResource("BoxMesh_cenmw")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
+shape = SubResource("BoxShape3D_svde7")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -0.871847, 0.489778, 0, -0.489778, -0.871847, 0, 4.23902, -2.28699)
+shadow_enabled = true
+
+[node name="Blocks" type="Node3D" parent="."]
+
+[node name="Block1" parent="Blocks" instance=ExtResource("1_wfoio")]
+transform = Transform3D(0.994155, 0.107965, 0, -0.107965, 0.994155, 0, 0, 0, 1, 0, 2.38199, 0)
+
+[node name="Block2" parent="Blocks" instance=ExtResource("1_wfoio")]
+transform = Transform3D(0.874907, -0.484291, 0, 0.484291, 0.874907, 0, 0, 0, 1, 0, 3.82757, 0)
+
+[node name="Block3" parent="Blocks" instance=ExtResource("1_wfoio")]
+transform = Transform3D(0.513287, 0.858217, 0, -0.858217, 0.513287, 0, 0, 0, 1, -0.576631, 5.87505, 0)
+
+[node name="Block4" parent="Blocks" instance=ExtResource("1_wfoio")]
+transform = Transform3D(0.913879, 0.405987, 0, -0.405987, 0.913879, 0, 0, 0, 1, 0.576631, 6.74666, 0)
+
+[node name="Steve" parent="." instance=ExtResource("2_xiay1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.70896, 1.84261)
+
+[node name="Coin1" parent="." instance=ExtResource("5_831ue")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.74399, 1, 2.73809)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("4_67vxn")
+
+[node name="HUD" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Test" type="Node2D" parent="HUD"]
+
+[node name="UI" type="CanvasLayer" parent="HUD/Test"]
+
+[node name="Virtual joystick left" parent="HUD/Test/UI" instance=ExtResource("5_8y0lm")]
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="HUD/Test/UI"]
+position = Vector2(920, 408)
+scale = Vector2(150, 150)
+texture_normal = SubResource("CanvasTexture_ln624")
+
+[connection signal="pressed" from="HUD/Test/UI/TouchScreenButton" to="Steve" method="_on_touch_screen_button_pressed"]
